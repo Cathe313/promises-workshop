@@ -4,7 +4,9 @@
   "description": "DecodeMTL promises workshop",
   "main": "index.js",
   "dependencies": {
-    "bluebird": "^2.10.1"
+    "bluebird": "^2.10.1",
+    "prompt": "^0.2.14",
+    "request": "^2.63.0"
   },
   "devDependencies": {},
   "scripts": {
