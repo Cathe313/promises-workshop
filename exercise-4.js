@@ -44,15 +44,13 @@ function synonym() {
               else {
                 synAdj = '';
               }
-        }
-    ).then(
-        function() {
+        
             console.log(colors.magenta.underline('These nouns are synonyms:\n '));
             console.log(colors.rainbow(synNouns.valueOf() + '\n\n'));
             console.log(colors.america('These verbs are synonyms: \n'));
             console.log(colors.random(synVerbs.valueOf() + '\n\n'));
             console.log(colors.trap('Or was your word an adjective? These adjectives are synonyms: \n'));
-            console.log(colors.zebra(synAdj.valueOf() + '\n'));           
+        console.log(colors.zebra(synAdj.valueOf() + '\n'));           
     }).catch(
         function(error){
             console.log(colors.inverse("Whoops! There was a problem: " + error));
