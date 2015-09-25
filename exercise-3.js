@@ -8,7 +8,8 @@ request = Promise.promisify(request);
 
 function userLocator(){
     prompt.start();
-    prompt.getAsync(['City']).then(
+    prompt.getAsync(['City']
+    ).then(
         function(response){
             return request("https://maps.googleapis.com/maps/api/geocode/json?address=" + response.City);
         }    
@@ -17,7 +18,6 @@ function userLocator(){
             var userPoz = JSON.parse(body);
             var userLat = Math.round(userPoz.results[0].geometry.location.lat * 100)/100;
             var userLong = Math.round(userPoz.results[0].geometry.location.lng * 100)/100;
-            //console.log("You are currently at latitude " + userLat + " x longitude " + userLong + "." );
             return {userLat:userLat, userLong:userLong};
         }
     );
@@ -49,6 +49,10 @@ function distance() {
         var d = R * c;
         return Math.round(d / 1000);
     }
+    ).catch(
+        function (error) {
+            console.log("Whoops, error! " + error );
+        }    
     );
 }        
     
