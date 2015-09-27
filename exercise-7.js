@@ -7,15 +7,16 @@ var weather = require('./library/weather');
 prompt = Promise.promisifyAll(prompt);
 request = Promise.promisify(request);
 
-function userLocator(){
-    var cityWeather = new Table({
-        chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
-         , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
-         , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
-         , 'right': '║' , 'right-mid': '╢' , 'middle': '│' },
-        head: ['Day', 'Min (C)', 'Max (C)', 'Icon', 'Summary'],
-        colWidths: [10, 15, 15, 8, 100]
-        });
+var cityWeather = new Table({
+    chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+     , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+     , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+     , 'right': '║' , 'right-mid': '╢' , 'middle': '│' },
+    head: ['Day', 'Min (C)', 'Max (C)', 'Icon', 'Summary'],
+    colWidths: [10, 15, 15, 8, 100]
+    });
+
+function weather(){
     var day = 1;    
     prompt.start();
     return prompt.getAsync(['City']
@@ -38,43 +39,44 @@ function userLocator(){
         function(response, body){
             var data = JSON.parse(body);
             return data.daily.data;
-        }).map(
-            function(parsedData) {
-                var emoji = "";
-                if (parsedData) {
-                    if (parsedData.icon === "clear-day") {
-                        emoji = "☀";
-                    }
-                    else if (parsedData.icon === "rain") {
-                        emoji = "☔"
-                    }
-                    else if (parsedData.icon === "partly-cloudy-day") {
-                        emoji = "⛅";
-                    }
-                    else if (parsedData.icon === "partly-cloudy-night") {
-                        emoji = "☁️";
-                    }
-                    else if (parsedData.icon === "wind") {
-                        emoji = "💨";
-                    }
-                    else if (parsedData.icon === "cloudy") {
-                        emoji = "☁️";
-                    }
-                    else if (parsedData.icon === "snow") {
-                        emoji = "❄️️";
-                    }
-                    else {
-                        emoji = parsedData.icon;
-                    }
-                    cityWeather.push([colors.rainbow('Day ' + day), colors.cyan(((parsedData.temperatureMin - 32) * 5/9).toFixed(1)), colors.green(((parsedData.temperatureMax - 32) * 5/9).toFixed(1)), emoji, colors.yellow(parsedData.summary)]);
-                    day ++;
-            } 
-        }
-    ).then(
-        function(){
-            console.log(cityWeather.toString());
+    }).map(
+        function(parsedData) {
+            var emoji = "";
+            if (parsedData) {
+                if (parsedData.icon === "clear-day") {
+                    emoji = "☀";
+                }
+                else if (parsedData.icon === "rain") {
+                    emoji = "☔"
+                }
+                else if (parsedData.icon === "partly-cloudy-day") {
+                    emoji = "⛅";
+                }
+                else if (parsedData.icon === "partly-cloudy-night") {
+                    emoji = "☁️";
+                }
+                else if (parsedData.icon === "wind") {
+                    emoji = "💨";
+                }
+                else if (parsedData.icon === "cloudy") {
+                    emoji = "☁️";
+                }
+                else if (parsedData.icon === "snow") {
+                    emoji = "❄️️";
+                }
+                else {
+                    emoji = parsedData.icon;
+                }
+                cityWeather.push([colors.rainbow('Day ' + day), colors.cyan(((parsedData.temperatureMin - 32) * 5/9).toFixed(1)), colors.green(((parsedData.temperatureMax - 32) * 5/9).toFixed(1)), emoji, colors.yellow(parsedData.summary)]);
+                day ++;
+        } 
+    }
+    ).catch(
+        function(error){
+            console.log("Sorry, there's been an " + error);
         }
     )
     
 }
-userLocator();
+weather().then( function() {console.log ( cityWeather.toString() ) } );
+
