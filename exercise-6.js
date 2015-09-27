@@ -33,17 +33,16 @@ function getAdj() {
     );
 }
 
-
+var table = new Table({
+    chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+     , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+     , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+     , 'right': '║' , 'right-mid': '╢' , 'middle': '│' },
+    head: ['Word', 'Synonyms: Nouns', 'Synonyms: Verbs', 'Synonyms: Adjectives'],
+    colWidths: [12, 40, 40, 40]
+    });
 
 function synonym() {
-    var table = new Table({
-        chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
-         , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
-         , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
-         , 'right': '║' , 'right-mid': '╢' , 'middle': '│' },
-        head: ['Word', 'Synonyms: Nouns', 'Synonyms: Verbs', 'Synonyms: Adjectives'],
-        colWidths: [12, 40, 40, 40]
-        });
     return Promise.join(getNouns(), getVerbs(), getAdj(), function(twoNouns, twoVerbs, twoAdj){
         var arrayOfWords = [twoNouns[0].word, twoNouns[1].word, twoVerbs[0].word, twoVerbs[1].word, twoAdj[0].word, twoAdj[1].word];
         return arrayOfWords;
@@ -82,10 +81,6 @@ function synonym() {
                 }
             );
         }
-    ).then(
-        function(){
-            console.log(table.toString()); 
-        }
     ).catch(
         function(error){
             console.log(colors.inverse("Whoops! There was a problem: " + error));
@@ -94,4 +89,5 @@ function synonym() {
     
 }    
 
-synonym();
+synonym().then(function(){
+            console.log(table.toString());});
