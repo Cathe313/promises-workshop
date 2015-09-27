@@ -16,7 +16,7 @@ var cityWeather = new Table({
     colWidths: [10, 15, 15, 8, 100]
     });
 
-function weather(){
+function weatherApp(){
     var day = 1;    
     prompt.start();
     return prompt.getAsync(['City']
@@ -78,5 +78,5 @@ function weather(){
     )
     
 }
-weather().then( function() {console.log ( cityWeather.toString() ) } );
+weatherApp().then( function() {console.log ( cityWeather.toString() ) } );
 
