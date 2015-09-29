@@ -7,17 +7,12 @@ var weather = require('./library/weather');
 prompt = Promise.promisifyAll(prompt);
 request = Promise.promisify(request);
 
-var cityWeather = new Table({
-    chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
-     , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
-     , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
-     , 'right': '║' , 'right-mid': '╢' , 'middle': '│' },
-    head: ['Day', 'Min (C)', 'Max (C)', 'Icon', 'Summary'],
-    colWidths: [10, 15, 15, 8, 100]
-    });
-
 function weatherApp(){
-    var day = 1;    
+    var day = 1;
+    var cityWeather = new Table({
+        head: ['Day', 'Min (C)', 'Max (C)', 'Icon', 'Summary'],
+        colWidths: [10, 15, 15, 8, 60]
+        });
     prompt.start();
     return prompt.getAsync(['City']
     ).then(
@@ -47,7 +42,7 @@ function weatherApp(){
                     emoji = "☀";
                 }
                 else if (parsedData.icon === "rain") {
-                    emoji = "☔"
+                    emoji = "☔";
                 }
                 else if (parsedData.icon === "partly-cloudy-day") {
                     emoji = "⛅";
@@ -69,14 +64,17 @@ function weatherApp(){
                 }
                 cityWeather.push([colors.rainbow('Day ' + day), colors.cyan(((parsedData.temperatureMin - 32) * 5/9).toFixed(1)), colors.green(((parsedData.temperatureMax - 32) * 5/9).toFixed(1)), emoji, colors.yellow(parsedData.summary)]);
                 day ++;
-        } 
-    }
+            }    
+        }
+    ).then(
+        function() {
+            console.log(cityWeather.toString());
+        }
     ).catch(
         function(error){
             console.log("Sorry, there's been an " + error);
         }
-    )
+    );
     
 }
-weatherApp().then( function() {console.log ( cityWeather.toString() ) } );
-
+weatherApp()
