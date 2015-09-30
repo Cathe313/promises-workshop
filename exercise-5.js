@@ -11,40 +11,39 @@ function synonym() {
     ).spread(
         function(res, body) {
             return JSON.parse(body);
-        }).map(
-            function(res, id, num){
-                return request("http://words.bighugelabs.com/api/2/" + bhtApiKey.apiKey + "/" + res.word + "/json"
-            ).spread(
-                function(res, body){
-                    var data = JSON.parse(body);
-                    return data;
+    }).map(
+        function(res, id, num){
+            return request("http://words.bighugelabs.com/api/2/" + bhtApiKey.apiKey + "/" + res.word + "/json"
+        ).spread(
+            function(res, body){
+                var data = JSON.parse(body);
+                return data;
+            }
+        ).then(
+            function(data){
+                if (data && data.noun && data.noun.syn) {
+                    var synNouns = pretty.prettyOutput(data.noun.syn);
+                } 
+                else {
+                    synNouns = '';
                 }
-            ).then(
-                function(data){
-                    if (data && data.noun && data.noun.syn) {
-                        var synNouns = pretty.prettyOutput(data.noun.syn);
-                    } 
-                    else {
-                        synNouns = '';
-                    }
-                    if (data && data.verb && data.verb.syn) {
-                        var synVerbs = pretty.prettyOutput(data.verb.syn);
-                    } 
-                    else {
-                        synVerbs = '';
-                    }
-                    if (data && data.adjective && data.adjective.syn) {
-                        var synAdj = pretty.prettyOutput(data.adjective.syn);
-                    } 
-                    else {
-                        synAdj = '';
-                    }
-    
-                    console.log(colors.green('Synonyms of ' + res.word + ': ' + synAdj + synNouns + synVerbs));
+                if (data && data.verb && data.verb.syn) {
+                    var synVerbs = pretty.prettyOutput(data.verb.syn);
+                } 
+                else {
+                    synVerbs = '';
                 }
-            );
+                if (data && data.adjective && data.adjective.syn) {
+                    var synAdj = pretty.prettyOutput(data.adjective.syn);
+                } 
+                else {
+                    synAdj = '';
+                }
+
+                console.log(colors.green('Synonyms of ' + res.word + ': ' + synAdj + synNouns + synVerbs));
+            }
+        );
         }
-        
     ).catch(
         function(error){
             console.log(colors.inverse("Whoops! There was a problem: " + error));
