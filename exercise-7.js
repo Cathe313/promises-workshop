@@ -9,10 +9,7 @@ request = Promise.promisify(request);
 
 function weatherApp(){
     var day = 1;
-    var cityWeather = new Table({
-        head: ['Day', 'Min (C)', 'Max (C)', 'Icon', 'Summary'],
-        colWidths: [10, 15, 15, 8, 60]
-        });
+    var arrayOfData = [];
     prompt.start();
     return prompt.getAsync(['City']
     ).then(
@@ -62,13 +59,21 @@ function weatherApp(){
                 else {
                     emoji = parsedData.icon;
                 }
-                cityWeather.push([colors.rainbow('Day ' + day), colors.cyan(((parsedData.temperatureMin - 32) * 5/9).toFixed(1)), colors.green(((parsedData.temperatureMax - 32) * 5/9).toFixed(1)), emoji, colors.yellow(parsedData.summary)]);
+                arrayOfData.push([colors.rainbow('Day ' + day), colors.cyan(((parsedData.temperatureMin - 32) * 5/9).toFixed(1)), colors.green(((parsedData.temperatureMax - 32) * 5/9).toFixed(1)), emoji, colors.yellow(parsedData.summary)]);
                 day ++;
             }    
         }
     ).then(
         function() {
+            var cityWeather = new Table({
+                head: ['Day', 'Min (C)', 'Max (C)', 'Icon', 'Summary'],
+                colWidths: [10, 15, 15, 8, 60]
+                });
+            for (var i=0; i<arrayOfData.length; i++) {
+                cityWeather.push(arrayOfData[i]);
+            }
             console.log(cityWeather.toString());
+            return cityWeather;
         }
     ).catch(
         function(error){
